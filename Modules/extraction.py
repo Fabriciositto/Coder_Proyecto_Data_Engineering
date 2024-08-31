@@ -1,10 +1,11 @@
 import requests
 import re
+import logging
 
 
-def extraction():
-    #selecciono nombre de ususario de github
-    user_name='holtzy'
+def extraction(user_name):
+    
+    
 
     #armo el url para la consulta
     url=f'https://api.github.com/users/{user_name}/repos'
@@ -12,11 +13,12 @@ def extraction():
     #realizo primer consulta
     try:
         res=requests.get(url)
+        logging.info('First request succcessful')
     except Exception as e:
-        print(f'Error :{e}')
+        logging.critical(f'First request unsuccessful. Error :{e}')
 
 
-    #guardo la data de la priemr consulta
+    #guardo la data de la primer consulta
     data_json=res.json()
 
     # paginación: obtengo información de cuántas páginas tiene la consulta
@@ -30,9 +32,10 @@ def extraction():
         try:
             new_url=f'{url}?page={page}'
             res=requests.get(new_url)
+            logging.info(f'Page {page} requested successfuly')
             data_json.extend(res.json())
         except Exception as e:
-            print(f'Error :{e}')
+            logging.critical(f'Request {page} unsuccessful. Error :{e}')
     
     
     return data_json

@@ -1,4 +1,5 @@
 import pandas as pd
+import logging
 
 def transformation(data_json):
     
@@ -25,4 +26,8 @@ def transformation(data_json):
     df['created_at']=pd.to_datetime(df['created_at'])
     df['updated_at']=pd.to_datetime(df['updated_at'])
 
+    #creo una columna compuesta que debería ser única en Redshift 
+    df['comp_id']=df['id'].astype(str)+'_'+df['extracted_timestamp'].astype(str)
+
+    logging.info('Transformation successful')
     return df
