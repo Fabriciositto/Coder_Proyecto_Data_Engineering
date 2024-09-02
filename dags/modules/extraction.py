@@ -1,21 +1,20 @@
 import requests
 import re
-import logging
+import json
+from datetime import datetime
 
-
-def extraction(user_name):
+def extraction():
     
     
-
+    user_name='holtzy'
     #armo el url para la consulta
     url=f'https://api.github.com/users/{user_name}/repos'
    
     #realizo primer consulta
     try:
         res=requests.get(url)
-        logging.info('First request succcessful')
     except Exception as e:
-        logging.critical(f'First request unsuccessful. Error :{e}')
+        print(f'First request unsuccessful. Error :{e}')
 
 
     #guardo la data de la primer consulta
@@ -32,10 +31,12 @@ def extraction(user_name):
         try:
             new_url=f'{url}?page={page}'
             res=requests.get(new_url)
-            logging.info(f'Page {page} requested successfuly')
             data_json.extend(res.json())
         except Exception as e:
-            logging.critical(f'Request {page} unsuccessful. Error :{e}')
+            print(f'Request {page} unsuccessful. Error :{e}')
     
+
+    with open('../storage_files/extraction.json', 'w') as file:
+        json.dump(data_json, file)
+
     
-    return data_json

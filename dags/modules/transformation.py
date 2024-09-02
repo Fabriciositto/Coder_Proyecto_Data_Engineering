@@ -1,8 +1,12 @@
 import pandas as pd
-import logging
+import json
 
-def transformation(data_json):
-    
+
+def transformation():
+
+    with open('../storage_files/extraction.json', 'r') as file:
+        data_json = json.load(file)
+
     #paso el json a df
     df=pd.DataFrame(data_json)
 
@@ -29,5 +33,4 @@ def transformation(data_json):
     #creo una columna compuesta que debería ser única en Redshift 
     df['comp_id']=df['id'].astype(str)+'_'+df['extracted_timestamp'].astype(str)
 
-    logging.info('Transformation successful')
-    return df
+    df.to_csv('../storage_files/transformation.csv', index=False, mode="a", header=False)

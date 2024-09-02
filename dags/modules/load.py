@@ -1,10 +1,14 @@
 import pandas as pd
-import logging
+from modules import connect_db
 
 
+def load(data):
 
-def load(data,engine,table,schema):
+    data=pd.read_csv('../storage_files/transformation.csv')
+    table='holtzy_repos'
+    schema='fabriciositto_coderhouse'
 
+    engine=connect_db()
     # #crear tabla
     # creation_query=f"""DROP TABLE IF EXISTS {schema}.{table};
 
@@ -37,8 +41,9 @@ def load(data,engine,table,schema):
                     if_exists='append',
                     index=False
                 )
-        logging.info('Load successful')
     except Exception as e:
-        logging.error(f'The upload could not be completed - {e}')
+        print(f'The upload could not be completed - {e}')
+    
+    engine.dispose()
     
     

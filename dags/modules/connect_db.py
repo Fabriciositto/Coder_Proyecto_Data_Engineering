@@ -1,7 +1,6 @@
 import sqlalchemy as sa
 from dotenv import load_dotenv
 import os
-import logging
 
 def connect_db():
     load_dotenv()
@@ -15,9 +14,8 @@ def connect_db():
     
     try:
         engine = sa.create_engine(f"postgresql+psycopg2://{username}:{password}@{host}:{port}/{dbname}")
-        logging.info('Conection successful')
     except Exception as e:
-        logging.critical(f'Unable to connect to database {dbname} - {e}')
+        print(f'Unable to connect to database {dbname} - {e}')
 
    
     
