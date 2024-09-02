@@ -1,3 +1,36 @@
+### Iniciar el programa
+
+```bash
+
+echo -e "AIRFLOW_UID=$(id -u)" >> ./.env
+
+```
+
+- Start project
+```bash
+docker compose up airflow-init
+```
+```bash
+docker compose up
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 Para finalizar tu tercer pre entregable, te proponemos que el script el script de la 2da entrega corra en un container de Docker y esté embebido en un DAG de Airflow dentro del container.
 
 

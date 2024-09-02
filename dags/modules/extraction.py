@@ -2,10 +2,13 @@ import requests
 import re
 import json
 from datetime import datetime
+import os
 
-def extraction():
+def extraction(exec_date, path):
     
     
+
+
     user_name='holtzy'
     #armo el url para la consulta
     url=f'https://api.github.com/users/{user_name}/repos'
@@ -35,8 +38,16 @@ def extraction():
         except Exception as e:
             print(f'Request {page} unsuccessful. Error :{e}')
     
+    date = datetime.strptime(exec_date, "%Y-%m-%d %H")
+    json_path = (
+        f"{path}/raw_data/data.json"
+    )
 
-    with open('../storage_files/extraction.json', 'w') as file:
+    os.makedirs(os.path.dirname(json_path), exist_ok=True)
+
+    with open(json_path, 'w',) as file:
         json.dump(data_json, file)
+
+
 
     

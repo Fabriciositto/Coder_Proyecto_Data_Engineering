@@ -1,10 +1,35 @@
 import pandas as pd
 from modules import connect_db
+from datetime import datetime
+import sqlalchemy as sa
+from dotenv import load_dotenv
+import os
 
 
-def load(data):
+def load(exec_date, path):
 
-    data=pd.read_csv('../storage_files/transformation.csv')
+    load_dotenv()
+
+
+    username = os.getenv('REDSHIFT_USERNAME')
+    password = os.getenv('REDSHIFT_PASSWORD')
+    host = os.getenv('REDSHIFT_HOST')
+    port = os.getenv('REDSHIFT_PORT')
+    dbname = os.getenv('REDSHIFT_DBNAME')
+    
+    try:
+        engine = sa.create_engine(f"postgresql+psycopg2://{username}:{password}@{host}:{port}/{dbname}")
+    except Exception as e:
+        print(f'Unable to connect to database {dbname} - {e}')
+
+
+
+    date = datetime.strptime(exec_date, "%Y-%m-%d %H")
+    csv_path = (
+        f"{path}/raw_data/data.csv"
+    )
+    data=pd.read_csv(csv_path, sep=",")
+
     table='holtzy_repos'
     schema='fabriciositto_coderhouse'
 

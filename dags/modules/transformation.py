@@ -1,10 +1,13 @@
 import pandas as pd
 import json
+from datetime import datetime
 
-
-def transformation():
-
-    with open('../storage_files/extraction.json', 'r') as file:
+def transformation(exec_date, path):
+    date = datetime.strptime(exec_date, "%Y-%m-%d %H")
+    json_path = (
+        f"{path}/raw_data/data.json"
+    )
+    with open(json_path, 'r') as file:
         data_json = json.load(file)
 
     #paso el json a df
@@ -33,4 +36,7 @@ def transformation():
     #creo una columna compuesta que debería ser única en Redshift 
     df['comp_id']=df['id'].astype(str)+'_'+df['extracted_timestamp'].astype(str)
 
-    df.to_csv('../storage_files/transformation.csv', index=False, mode="a", header=False)
+    csv_path = (
+        f"{path}/raw_data/data.csv"
+    )
+    df.to_csv(csv_path, index=False, mode="a", header=False)
