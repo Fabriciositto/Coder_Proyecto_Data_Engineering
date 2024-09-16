@@ -5,6 +5,7 @@ venv
 TO_DO.txt
 app.log
 __pycache__
-logs
+
 plugins
 config
+logs
