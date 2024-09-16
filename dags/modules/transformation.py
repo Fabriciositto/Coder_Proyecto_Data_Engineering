@@ -36,6 +36,8 @@ def transformation(exec_date, path):
     #creo una columna compuesta que debería ser única en Redshift 
     df['comp_id']=df['id'].astype(str)+'_'+df['extracted_timestamp'].astype(str)
 
+    df.drop_duplicates(inplace=True)
+
     csv_path = (
         f"{path}/raw_data/data.csv"
     )

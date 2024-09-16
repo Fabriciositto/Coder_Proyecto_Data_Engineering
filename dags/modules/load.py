@@ -1,26 +1,12 @@
 import pandas as pd
-from modules import connect_db
 from datetime import datetime
-import sqlalchemy as sa
-from dotenv import load_dotenv
+from modules import connect_db
 import os
 
 
 def load(exec_date, path):
 
-    load_dotenv()
-
-
-    username = os.getenv('REDSHIFT_USERNAME')
-    password = os.getenv('REDSHIFT_PASSWORD')
-    host = os.getenv('REDSHIFT_HOST')
-    port = os.getenv('REDSHIFT_PORT')
-    dbname = os.getenv('REDSHIFT_DBNAME')
-    
-    try:
-        engine = sa.create_engine(f"postgresql+psycopg2://{username}:{password}@{host}:{port}/{dbname}")
-    except Exception as e:
-        print(f'Unable to connect to database {dbname} - {e}')
+    engine=connect_db
 
 
 
@@ -33,7 +19,6 @@ def load(exec_date, path):
     table='holtzy_repos'
     schema='fabriciositto_coderhouse'
 
-    engine=connect_db()
     # #crear tabla
     # creation_query=f"""DROP TABLE IF EXISTS {schema}.{table};
 
@@ -57,18 +42,23 @@ def load(exec_date, path):
     # with engine.connect() as connection:
     #     connection.execute(creation_query)
 
+    if engine is None:
+        print("The engine could not be created. Exiting...")
+    else:
+        print("Engine is created and ready to use.")
 
     try:
-        data.to_sql(
-                    table,
-                    con=engine,
-                    schema=schema,
-                    if_exists='append',
-                    index=False
-                )
+        with engine.connect() as connection:
+            data.to_sql(
+                table,
+                con=connection,  # use connection here
+                schema=schema,
+                if_exists='append',
+                index=False
+            )
+        print("Upload successful")
     except Exception as e:
         print(f'The upload could not be completed - {e}')
     
-    engine.dispose()
     
     

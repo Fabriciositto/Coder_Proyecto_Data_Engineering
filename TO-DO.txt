@@ -1,0 +1,11 @@
+No hay una tarea que realice 2 acciones diferentes
+
+- Separar la conexión a la DB en la acción LOAD --------- DONE
+
+
+- Crear alertas por email
+
+- Hacer que el script funcione
+
+
+

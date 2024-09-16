@@ -2,6 +2,9 @@ venv
 .env
 *.pdf
 *.xlsx
-TO_DO.md
+TO_DO.txt
 app.log
 __pycache__
+logs
+plugins
+config

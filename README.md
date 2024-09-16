@@ -1,71 +1,67 @@
 ### Iniciar el programa
 
+Se creó un correo gmail con fines de notificación de este proyecto
 ```bash
-
 echo -e "AIRFLOW_UID=$(id -u)" >> ./.env
-
+echo -e "AIRFLOW__SMTP__SMTP_PASSWORD='kovilszuenesmrre" >> ./.env
+echo -e "AIRFLOW__SMTP__SMTP_USER='etl.alerts.coder@gmail.com" >> ./.env
 ```
 
-- Start project
-```bash
-docker compose up airflow-init
-```
 ```bash
 docker compose up
 ```
 
 
+# ETL Completo en Airflow
 
 
+## Objetivos
+
+- Crear un pipeline que extraiga datos de una API pública de forma constante combinándolos con información extraída de una base de datos (mínimamente estas 2 fuentes de datos, pero pueden utilizarse hasta 4).
+- Colocar los datos extraídos en un Data Warehouse. 
+- Automatizar el proceso que extraerá, transformará y cargará datos cuantitativos (ejemplo estos son: valores de acciones de la bolsa, temperatura de ciudades seleccionadas, valor de una moneda comparado con el dólar, casos de covid). 
+- Automatizar el proceso para lanzar alertas (2 máximo) por e-mail en caso de que un valor sobrepase un límite configurado en el código
 
 
+## Requisitos
+
+### Pipeline
+
+El Pipeline debe ser entregado en un repositorio de GitHub. La solución provista deberá tener todo lo necesario para correr en el ambiente del evaluador.
+
+#### Script
+El script es facilitado desde Python y deberá cumplir con estándares de calidad, como no duplicar secciones y ser comprensible para cualquiera que lo vea por primera vez.
+
+#### Extracción de datos de una API pública
+El proceso de extracción de los datos deberá contar mínimamente con dos fuentes de datos pero puede llegar a tener hasta cuatro. Las fuentes pueden ser: una API pública, una base de datos que debería ser instanciada con la solución entregada o un archivo estático en formato tabular.
+
+#### Carga de datos de un Datawarehouse
+Los datos pueden ser de procesos cambiantes, como por ejemplo: valores de acciones de la bolsa, temperatura de ciudades seleccionadas, valor de una moneda comparado con el dólar, casos de covid.
+
+#### Transformación de datos mediante Pandas
+El proceso de transformación de los datos tendrá que seguir un sentido lógico, que ayude a la eficientización del proceso y permita un flujo adecuado de los mismos. Es recomendable añadir columnas que puedan proporcionar información valiosa y combinar los dataframes de Pandas de diferentes fuentes en uno.
+
+#### Mecanismos de Alerting
+El mecanismo de alerta tiene que ser manipulable, tiene que ser flexible para poder cambiar todo tipo de configuraciones de la misma, como pueden ser los valores límite (máximo y mínimo). También cambiar otro tipo de configuraciones de la alerta (Por ejemplo, modificar las ciudades, las acciones, o demás detalles que esta emita). El mensaje recibido es ampliamente descriptivo, incluyendo todos los detalles pertinentes. 
+
+#### DAG
+El DAG de Airflow contiene todo lo necesario para correr el script de forma eficiente. Deberá utilizar preferentemente el operador PythonOperator o en segunda instancia el BashOperator. Cada tarea del DAG deberá tener un objetivo lógico y una tarea no debería hacer muchas cosas, es decir, el DAG debería tener una separación de tareas lógica.
+En DAG debería permitir un mecanismo de backfill.
+
+#### Contenedor de Docker
+El Dockerfile que contiene Airflow y el DAG posee los pasos mínimos y necesarios para ejecutar Airflow de forma correcta. No hay librerias, archivos o binarios que no son utilizados en la ejecución del script. No hay pasos extras, irrelevantes o ineficientes. La imagen que genera ese Dockerfile no supera los 4GB de espacio.
 
 
+### Tabla
+
+Este documento se presetna en formado .pdf
+
+#### Modelado
+Entregar el modelado de la tabla en un script de tipo SQL para que el evaluador pueda ejecutarlo antes de la ejecución del script. La tabla donde se ingestan los datos posee una buena separación de columnas que mínimamente incluyan: una columna de fecha que registre cuándo fue extraída esa información, otra columna que posea la fecha de cuándo esa información fue generada, una o varias columnas de string donde se incluya la información relevante.
 
 
+### Contenidos adicionales
 
-
-
-
-
-
-
-
-Para finalizar tu tercer pre entregable, te proponemos que el script el script de la 2da entrega corra en un container de Docker y esté embebido en un DAG de Airflow dentro del container.
-
-
-# Objetivos
-
-Crear un script liviano y funcional que pueda ser utilizado en cualquier Sistema operativo y por cualquier usuario. 
-
-Dockerizar un script para hacerlo funcional en cualquier sistema operativo. 
-
-
-1. Dockerfile
-Dockerfile y código con todo lo necesario para correr (si es necesario incluir un manual de instrucciones o pasos para correrlo), subido en repositorio de Github o en Google Drive.
-
-El objetivo es entregar un Dockerfile donde sean incluídas las instrucciones para hacerlo correr de ser necesario. Considera los siguientes puntos:
-El container debe ser lo más liviano posible: Para que el script funcione sin problemas este debe ser ligero. 
-Cualquier usuario podría correr el container. 
-El script debe estar listo para su ejecución.
-El Dockerfile debería utilizar un FROM de python y después instalar Airflow con pip.
-El Dockerfile debería tener un comando COPY para copiar el archivo a la carpeta de dag.
-El script debería estar dentro de una función que realice una llamada desde un PythonOperator
-El DAG debería correr de forma diaria
-El nombre del DAG y su descripción deberían ser fáciles y precisos de entender.
-Los parámetros elegidos fueron justificados de forma adecuada
-
-
-Este preentregable debería estar muy cercano ya al resultado del proyecto final.
-
-
-2. Tabla en Amazon Redshift
-
-Tabla creada en Redshift con los datos de muestra que hayan sido cargados mediante el script.
-
-A su vez, la entrega involucra la creación de una versión inicial de la tabla donde los datos serán cargados posteriormente. Considera los siguientes puntos para su elaboración:
-Los datos deben ser extraidos y cargados con sus correspondientes tipos de datos en relación a la tabla creada en Redshift.
-Todas las columnas deberían ser cargadas en la tabla.
-Debe haber una clave primaria compuesta definida en la tabla o en el código
-En caso de que se quiera insertar una fila con los mismos datos, debe ser reemplazada por los nuevos? Por ejemplo: la columna "fecha" y "ciudad" puede ser una clave primaria compuesta, ya que no deberían haber 2 datos diferentes para una misma ciudad en un mismo día.
-Recuerda que esto será la base para tu proyecto final.
+- Mecanismo de backfill mediante "context"
+- Seteo de cluster y sort keys en la tabla
+- Extracción de datos de otra base de datos o de un archivo estático

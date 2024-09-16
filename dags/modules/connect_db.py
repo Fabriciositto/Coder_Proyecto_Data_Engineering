@@ -14,6 +14,7 @@ def connect_db():
     
     try:
         engine = sa.create_engine(f"postgresql+psycopg2://{username}:{password}@{host}:{port}/{dbname}")
+        print('Connection successful')
     except Exception as e:
         print(f'Unable to connect to database {dbname} - {e}')
 
